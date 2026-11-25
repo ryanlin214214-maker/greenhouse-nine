@@ -1,0 +1,10 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1100,height:700}});q.setDefaultTimeout(180000);q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/n87.html',{timeout:180000});await q.waitForTimeout(9000);
+await q.evaluate(()=>window.__hub('enter'));await q.waitForTimeout(1500);const D=JSON.parse(await q.evaluate(()=>window.__hubDbg()));console.log(D.pts,D.pos);
+const P=Object.fromEntries(D.pts.map(p=>[p[0],p]));const y=D.pos[1];
+const w=P.w;await q.evaluate(c=>{window.__camOv=c},[w[1]+.2,y+1.75,w[2]+1.3,w[1]+3.8,y+1.55,w[2]]);await q.waitForTimeout(2500);await q.screenshot({path:'H_vendor.png',timeout:120000});
+const a=P.a;await q.evaluate(c=>{window.__camOv=c},[a[1]-1,y+2.1,a[2],a[1]+5.2,y+1.3,a[2]]);await q.waitForTimeout(2500);await q.screenshot({path:'H_stand.png',timeout:120000});
+console.log('errs',errs);await b.close()})();

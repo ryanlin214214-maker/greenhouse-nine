@@ -1,0 +1,16 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1000,height:640}});q.setDefaultTimeout(180000);q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/n84r.html',{timeout:180000});await q.waitForTimeout(9000);await q.evaluate(()=>document.getElementById('go').click());await q.waitForTimeout(1500);
+const C=c=>q.evaluate(c=>window.__cr(c),c);
+await q.evaluate(()=>window.__fx('setup'));await q.evaluate(()=>window.__inv('play'));
+await q.evaluate(()=>window.__poseT([{x:30,y:.9,z:8,fx:30,fz:16}]));await q.evaluate(()=>{window.__freeze=0;return window.__inv('play')});
+console.log('credits start',await C('n'));console.log('after a kill',await C('kill'));
+await q.waitForTimeout(1200);console.log('hud',await q.evaluate(()=>document.getElementById('cred').textContent),'stored',await q.evaluate(()=>localStorage.getItem('gh9-wallet')));
+await q.keyboard.press('KeyO');await q.waitForTimeout(300);console.log('spectator on',await C('spec'));
+await q.keyboard.down('KeyW');await q.waitForTimeout(2500);await q.keyboard.up('KeyW');console.log('after holding W',await C('spec'));
+console.log('shield after a 40 hit while spectating',await C('hurt'));
+await q.screenshot({path:'SP_spec.png',timeout:120000});
+await q.keyboard.press('KeyO');await q.waitForTimeout(300);console.log('spectator off',await C('spec'));
+console.log('errs',errs);await b.close()})();

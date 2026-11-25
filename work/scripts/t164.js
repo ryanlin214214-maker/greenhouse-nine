@@ -1,0 +1,13 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const q=await b.newPage({viewport:{width:1000,height:640}});
+await q.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+await q.goto('file://'+process.cwd()+'/gtest/x.html',{timeout:120000});await q.waitForTimeout(8000);await q.click('#go');await q.waitForTimeout(800);
+await q.evaluate(()=>{window.__fx('setup');window.__camOv=[30,2.2,15,30,2,0];for(const id of['hud','comms','cross','radar','overlay','cine','msg'])document.getElementById(id).hidden=true});
+const go=async(n,f)=>{await q.evaluate(f);await q.evaluate(n=>{window.__fx('gl');window.__fx('step',.1);if(n!=='a')window.__pfxS()},n);await q.waitForTimeout(60);await q.screenshot({path:'Y_'+n+'.png',clip:{x:76,y:58,width:848,height:532}});await q.evaluate(()=>window.__fx('step',5))};
+await go('a',()=>{});
+await go('noSmoke',()=>{});
+console.log('normal',await q.evaluate(()=>window.__pfxN()));await go('fireNormal',()=>{});
+console.log('ok');await b.close()})();

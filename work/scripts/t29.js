@@ -1,0 +1,14 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const p=await b.newPage({viewport:{width:1100,height:720}});
+p.on('pageerror',e=>errs.push(e.message));
+await p.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await p.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await p.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+await p.goto('file://'+process.cwd()+'/gtest/'+process.argv[2]+'.html');await p.waitForTimeout(7000);await p.click('#go');await p.waitForTimeout(1500);
+await p.evaluate(()=>{window.__hold=()=>window.__pin()});
+const base=await p.evaluate(()=>window.__ragBase());await p.waitForTimeout(1500);const base2=await p.evaluate(()=>window.__ragBase());console.log('baseline',JSON.stringify(base2));
+await p.evaluate(()=>window.__rag());await p.waitForTimeout(1200);console.log('killed',await p.evaluate(()=>window.__ragKill()));
+await p.waitForTimeout(process.argv[2]==='f'?1300:300);console.log('t~2s',await p.evaluate(()=>window.__ragRep()));await p.screenshot({path:'rag_'+process.argv[2]+'.png'});
+for(let k=0;k<6;k++){await p.waitForTimeout(8000);console.log('later',k,await p.evaluate(()=>window.__ragRep()),await p.evaluate(()=>window.__ct()))}console.log('after',await p.evaluate(()=>window.__ragRep()));
+console.log('errs',errs);await b.close()})();

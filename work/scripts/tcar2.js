@@ -1,0 +1,11 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const q=await b.newPage({viewport:{width:480,height:300}});q.setDefaultTimeout(600000);q.on('pageerror',e=>console.log('ERR',e.message));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/t104x.html',{timeout:240000});await q.waitForTimeout(5000);
+await q.evaluate(()=>window.__rowLook&&window.__rowLook());
+await q.evaluate(()=>window.__x("INTRO.on=false;setState('playing');window.__freeze=true"));await q.evaluate(()=>window.__hub('enter'));await q.waitForTimeout(2000);
+console.log(await q.evaluate(()=>window.__x(`for(let i=0;i<3;i++){update(1/30);hubTick(1/30)}const v=MCARS[0];const L=[];L.push('HC '+HC.toArray()+' car0 '+v.pos.toArray().map(x=>x.toFixed(1))+' home '+v.home.map(x=>x.toFixed(1)));
+ pos.set(v.pos.x,0,v.pos.z+3);for(let i=0;i<3;i++){update(1/30);hubTick(1/30)}hubUse();L.push('in '+!!veh+' same '+(veh===v)+' vpos '+v.pos.toArray().map(x=>x.toFixed(1)));
+ v.h=Math.PI/2;keys.KeyW=true;for(let i=0;i<12;i++){update(1/30);L.push('step '+i+' v '+v.v.toFixed(1)+' vpos '+v.pos.toArray().map(x=>x.toFixed(1))+' pos '+pos.toArray().map(x=>x.toFixed(1)))}L.join('\\n')`)));
+await b.close()})();

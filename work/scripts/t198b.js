@@ -1,0 +1,12 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1100,height:680}});q.setDefaultTimeout(240000);q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));q.on('console',m=>{if(m.type()==='error')errs.push('console '+m.text().slice(0,200))});
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/n90.html',{timeout:240000});await q.waitForTimeout(9000);
+console.log(await q.evaluate(()=>window.__hub('enter')));await q.waitForTimeout(8000);console.log(await q.evaluate(()=>window.__hubDbg()));await q.addStyleTag({content:'#msg{display:none!important}'});
+const Z=-2400-1100;const S=async(n,c,w)=>{await q.evaluate(c=>{window.__camOv=c},[c[0],c[1],c[2]+Z,c[3],c[4],c[5]+Z]);await q.waitForTimeout(w||3000);await q.screenshot({path:'X_'+n+'.png',timeout:240000})};
+await q.screenshot({path:'X_spawn.png',timeout:240000});
+const V=process.argv[2]||'all';
+await S('npcs',[-40,4,1150,20,2,1192]);await S('ships',[0,3,1118,0,3,1160]);await S('skydeck',[0,1.7,1352,0,-30,1420]);await S('hall',[0,2.2,1068,0,6,990]);await S('armoury',[-15,3,1024,-45,5,1060]);await S('gallery',[30,4,1056,46,8,1072]);await S('platform',[10,4,1400,0,25,1150]);await S('spawn',[-30,1.7,1112,0,3,1080]);
+console.log('calls',await q.evaluate(()=>window.__dbg?window.__dbg():''));
+console.log('errs',errs.slice(0,6));await b.close()})();

@@ -1,0 +1,12 @@
+const {chromium}=require('playwright');const fs=require('fs');const P=Math.PI;
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const q=await b.newPage({viewport:{width:1250,height:780}});q.setDefaultTimeout(240000);
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/t101x.html',{timeout:240000});await q.waitForTimeout(5000);
+await q.evaluate(()=>window.__rowLook&&window.__rowLook());await q.waitForTimeout(500);
+console.log(await q.evaluate(()=>window.__x(`INTRO.on=false;setState('playing');window.__freeze=true;enemies.length=0;for(let i=0;i<5;i++)update(1/30);
+ const info=(o)=>{if(!o.geometry.boundingBox)o.geometry.computeBoundingBox();const bb=o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld);const m=o.material;const key=Object.keys(MAT).find(k=>MAT[k]===m)||null;return o.geometry.type+' mat:'+(key||'?')+' rough '+m.roughness+' met '+m.metalness+' bb '+bb.min.toArray().map(v=>v.toFixed(1))+' / '+bb.max.toArray().map(v=>v.toFixed(1))+' verts '+o.geometry.attributes.position.count+' po '+m.polygonOffset};
+ const rc=new T.Raycaster(new T.Vector3(-3.9,3,9.2),new T.Vector3(0,-1,0));rc.camera=cam;const a=rc.intersectObjects(scene.children,true).filter(i=>i.object.isMesh).slice(0,5).map(i=>i.point.y.toFixed(3)+' '+info(i.object));
+ const rc2=new T.Raycaster(new T.Vector3(28,6.6,70),new T.Vector3(1,-.12,-.1).normalize());rc2.camera=cam;const b2=rc2.intersectObjects(scene.children,true).filter(i=>i.object.isMesh).slice(0,2).map(i=>info(i.object));
+ const vk=Object.keys(window).length;'ZEBRA\\n'+a.join('\\n')+'\\nDISC\\n'+b2.join('\\n')+'\\nVMS '+(typeof VMS!=='undefined'&&VMS.color?VMS.color.getHexString()+' r'+VMS.roughness+' em'+(VMS.emissive&&VMS.emissive.getHexString()):'?')`)));
+await b.close()})();

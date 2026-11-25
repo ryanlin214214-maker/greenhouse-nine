@@ -1,0 +1,22 @@
+const {chromium}=require('playwright');const fs=require('fs');const page=process.argv[2]||'n69.html';
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--autoplay-policy=no-user-gesture-required']});
+const errs=[];const q=await b.newPage({viewport:{width:1000,height:640}});q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/'+page,{timeout:120000});await q.waitForTimeout(9000);
+const E=(f,a)=>q.evaluate(f,a),step=t=>q.evaluate(t=>window.__fstep(t),t);
+const hide=()=>q.evaluate(()=>{for(const id of['msg','comms'])document.getElementById(id).hidden=true});
+const mode=process.argv[3]||'all';
+if(mode==='snd'){console.log('sound',await E(l=>window.__sndT(l),process.argv[4].split(',')));console.log('errs',errs);await b.close();return}
+await E(()=>window.__fly(2));await step(4.2);
+console.log('full loop (hold up 7.2 s):',await E(()=>window.__loopT(7.2)));
+await E(()=>window.__fly(2));await step(4.2);
+console.log('half loop (hold up 3.3 s):',await E(()=>window.__loopT(3.3)));
+await E(()=>window.__fly(2));await step(4.2);
+console.log('markers:',await E(()=>window.__tgCount()));
+await E(()=>window.__halcView());await step(2);await hide();console.log('markers in halc view:',await E(()=>window.__tgCount()));await q.screenshot({path:'W_space.png',timeout:120000});
+await step(.3);console.log('ace:',await E(()=>window.__ace('spawn')));await step(1);
+console.log('ace bot:',await E(()=>window.__aceBot(240)));
+await step(1);console.log('after ace:',await E(()=>window.__ace('info')));
+await E(()=>window.__fly(3));await step(4.2);console.log('wing landing:',await E(()=>window.__wingT(9)));
+await E(()=>window.__wingCam());await step(.2);await hide();await q.screenshot({path:'W_pad.png',timeout:120000});
+console.log('errs',errs);await b.close()})();

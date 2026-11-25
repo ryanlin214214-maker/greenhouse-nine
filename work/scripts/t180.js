@@ -1,0 +1,15 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1000,height:640}});q.setDefaultTimeout(180000);q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/'+(process.argv[2]||'n71.html'),{timeout:180000});await q.waitForTimeout(9000);
+const E=f=>q.evaluate(f),step=t=>q.evaluate(t=>window.__fstep(t),t),fc=()=>E(()=>window.__fc());
+const shot=async n=>{await q.evaluate(()=>{document.getElementById('msg').hidden=true});await q.screenshot({path:'G_'+n+'.png',timeout:120000})};
+await E(()=>window.__fly(2));await step(4.3);console.log('after 2-2 intro:',await fc());
+console.log('wingmen:',await E(()=>window.__wingSpawnT()));await step(1.5);
+await E(()=>window.__fcEnd('end2'));await step(.3);await shot('out_a');console.log('fly-off 0.3 s:',await fc());
+await step(1.5);await shot('out_b');console.log('fly-off ~1.8 s:',await fc());
+await step(3.2);console.log('after fly-off:',await fc());
+await E(()=>document.getElementById('go').click());await q.waitForTimeout(300);await step(1.3);await shot('in_a');console.log('2-3 fly-in 1.3 s:',await fc());
+await step(2.8);console.log('after 2-3 fly-in:',await fc());
+console.log('errs',errs);await b.close()})();

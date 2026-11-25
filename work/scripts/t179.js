@@ -1,0 +1,15 @@
+const {chromium}=require('playwright');const fs=require('fs');const page=process.argv[2],pre=process.argv[3];
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1000,height:640}});q.setDefaultTimeout(180000);q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/'+page,{timeout:180000});await q.waitForTimeout(9000);await q.evaluate(()=>document.getElementById('go').click());await q.waitForTimeout(1500);
+console.log('pbr',await q.evaluate(()=>(window.__pbrN?window.__pbrN():'n/a')));
+const hide=()=>q.evaluate(()=>{for(const id of['hud','comms','cross','radar','overlay','cine','msg'])document.getElementById(id).hidden=true});
+const shot=async(n,c)=>{await q.evaluate(c=>{window.__camOv=c},c);await hide();await q.waitForTimeout(2500);await q.screenshot({path:pre+'_'+n+'.png',clip:{x:76,y:58,width:848,height:532}})};
+await q.evaluate(()=>window.__poseT([{x:27,y:.9,z:9,fx:30,fz:16},{x:30,y:.9,z:9,fx:30,fz:16},{x:33,y:.9,z:9,fx:30,fz:16,type:6}]));
+await shot('robots',[30,1.5,13.2,30,1.1,9]);
+await shot('hangar',[40,1.7,172,0,0,215]);
+await shot('spine',[0,1.7,-55,0,.6,-120]);
+await q.evaluate(()=>{window.__camOv=null;window.__freeze=0;return window.__fly(1)});await q.waitForTimeout(500);await q.evaluate(()=>window.__fstep(.6));await hide();await q.waitForTimeout(2500);
+await q.evaluate(()=>{for(const id of['fhud','fctitle'])if(document.getElementById(id))document.getElementById(id).hidden=true});await q.screenshot({path:pre+'_kestrel.png',clip:{x:76,y:58,width:848,height:532}});
+console.log('pbr end',await q.evaluate(()=>(window.__pbrN?window.__pbrN():'n/a')),'errs',errs);await b.close()})();

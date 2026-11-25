@@ -1,0 +1,10 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:900,height:620}});q.setDefaultTimeout(180000);q.on('pageerror',e=>errs.push(e.message));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/n88.html',{timeout:180000});await q.waitForTimeout(9000);await q.evaluate(()=>document.getElementById('go').click());await q.waitForTimeout(2500);
+await q.evaluate(()=>window.__rowLook());
+const log=async n=>console.log(n,JSON.stringify(await q.evaluate(()=>window.__fpmp())));
+await log('rest');await q.keyboard.down('KeyW');for(let i=0;i<4;i++){await q.waitForTimeout(120);await log('go'+i)}await q.waitForTimeout(800);await log('cruise');
+await q.keyboard.up('KeyW');for(let i=0;i<4;i++){await q.waitForTimeout(120);await log('stop'+i)}await q.waitForTimeout(1200);await log('settled');
+console.log('errs',errs);await b.close()})();

@@ -1,0 +1,17 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const p=await b.newPage({viewport:{width:1000,height:640}});p.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await p.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await p.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await p.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+await p.addInitScript(()=>{localStorage.setItem('gh9-save',JSON.stringify({v:2,t:5,wave:3,cls:0,score:900,guns:[0,1,2,3,4,5].map(k=>({k,rar:2,pow:3}))}))});
+await p.goto('file://'+process.cwd()+'/gtest/n.html',{timeout:90000});await p.waitForTimeout(8000);
+console.log('menu:',await p.evaluate(()=>window.__menu()));
+await p.evaluate(s=>document.querySelector(s).click(),'#stagesBtn');await p.waitForTimeout(300);await p.screenshot({path:'m_menu.png'});
+console.log('jump to 1-3 from the title:',await p.evaluate(()=>window.__jump(1,3)));
+console.log('clear it:',await p.evaluate(()=>window.__clearNow()),'| save still',await p.evaluate(()=>localStorage.getItem('gh9-save').slice(0,60)));
+console.log('die:',await p.evaluate(()=>window.__dieNow()));
+console.log('retry:',await p.evaluate(()=>window.__retryNow()));
+console.log('die then jump to 1-1:',await p.evaluate(()=>{window.__dieNow();return window.__jump(1,1)}));
+console.log('start shift after a jump (nosave must be false):',await p.evaluate(()=>{window.__dieNow();document.getElementById('go').click();return window.__ms()}));
+console.log('errs',errs);await b.close()})();

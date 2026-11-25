@@ -1,0 +1,17 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--autoplay-policy=no-user-gesture-required']});
+const errs=[];const p=await b.newPage({viewport:{width:800,height:500}});p.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await p.addInitScript(()=>{const sp={log:[],active:[]};window.__sp=sp;window.SpeechSynthesisUtterance=function(t){this.text=t};
+ Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{getVoices:()=>[{name:'A',lang:'en-US'}],get speaking(){return sp.active.length>0},get pending(){return false},cancel(){sp.active.length=0},speak(u){sp.log.push(u.text);sp.active.push(u);u.onstart&&u.onstart()},onvoiceschanged:null}})});
+await p.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await p.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await p.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+const t0=Date.now();await p.goto('file://'+process.cwd()+'/gtest/n.html',{timeout:120000});await p.waitForTimeout(8000);console.log('page loaded in',((Date.now()-t0)/1000).toFixed(1),'s (headless, slow)');
+await p.evaluate(()=>document.getElementById('go').click());await p.waitForTimeout(500);
+console.log('all clips:',await p.evaluate(()=>window.__vclipAll()));
+await p.evaluate(()=>window.__ijump(4.6));await p.waitForTimeout(1500);console.log('first caption in the cutscene:',await p.evaluate(()=>window.__vstate()));
+await p.waitForTimeout(3000);console.log('3 s later:',await p.evaluate(()=>window.__vstate()));
+console.log('pause/resume mid-line:',await p.evaluate(()=>window.__vpz()));
+await p.keyboard.press('Space');await p.waitForTimeout(1500);console.log('after skipping the cutscene (opening radio line):',await p.evaluate(()=>window.__vstate()));
+console.log('a line with no recording falls back to the computer voice:',await p.evaluate(()=>window.__vplay('This sentence has no recording at all.','R')));
+console.log('errs',errs);await b.close()})();

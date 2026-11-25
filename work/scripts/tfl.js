@@ -1,0 +1,10 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const q=await b.newPage({viewport:{width:900,height:560}});q.setDefaultTimeout(240000);q.on('pageerror',e=>console.log('ERR',e.message));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/t99x.html',{timeout:240000});await q.waitForTimeout(5000);
+await q.evaluate(()=>window.__rowLook&&window.__rowLook());await q.waitForTimeout(500);
+console.log(await q.evaluate(()=>window.__x(`INTRO.on=false;setState('playing');pos.set(0,0,100);yaw=Math.PI;for(let i=0;i<10;i++)update(1/30);
+ const rc=new T.Raycaster(new T.Vector3(0,3,104),new T.Vector3(0,-1,0));rc.camera=cam;const h=rc.intersectObjects(scene.children,true).slice(0,4);
+ JSON.stringify(h.map(x=>{const m=x.object.material;return {n:x.object.type,d:+x.distance.toFixed(2),inst:!!x.object.isInstancedMesh,col:m.color&&m.color.getHexString(),met:m.metalness,rough:m.roughness,mm:!!m.metalnessMap,rm:!!m.roughnessMap,nm:!!m.normalMap,map:!!m.map,env:m.envMapIntensity,em:m.emissive&&m.emissive.getHexString(),rs:x.object.receiveShadow,trans:m.transparent,op:m.opacity,blend:m.blending}}))+' hemi '+hemi.intensity.toFixed(2)+' '+hemi.color.getHexString()+' sun '+sun.intensity.toFixed(2)+' exp '+renderer.toneMappingExposure.toFixed(2)+' envI '+scene.environmentIntensity`)));
+await b.close()})();

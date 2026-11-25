@@ -1,0 +1,18 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1100,height:700}});q.setDefaultTimeout(180000);q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/n86.html',{timeout:180000});await q.waitForTimeout(9000);
+const H=(c,a)=>q.evaluate(([c,a])=>window.__hub(c,a),[c,a]);const hide=()=>q.evaluate(()=>{for(const id of['comms','msg'])document.getElementById(id).hidden=true});
+console.log('enter',await H('enter'));await q.waitForTimeout(3000);await hide();await q.screenshot({path:'HB_hall.png',timeout:120000});
+await H('walk',[8,-2390,-Math.PI/2+.3]);await q.waitForTimeout(2500);await hide();await q.screenshot({path:'HB_shops.png',timeout:120000});
+await H('walk',[0,-2370,Math.PI]);await q.waitForTimeout(2500);await hide();await q.screenshot({path:'HB_back.png',timeout:120000});
+console.log('credits',await H('cr',12000));
+await H('walk',[22.6,-2425,-Math.PI/2]);console.log('near weapons',await H('near'));console.log('open',await H('use'));await q.waitForTimeout(800);await q.screenshot({path:'HB_wshop.png',timeout:120000});
+console.log('buy gun 0',await H('buy',0));console.log('close',await H('close'));
+await H('walk',[22.6,-2375,-Math.PI/2]);console.log('near ships',await H('near'));console.log('open',await H('use'));await q.waitForTimeout(800);await q.screenshot({path:'HB_sshop.png',timeout:120000});
+console.log('buy swiftwing',await H('buy',1));console.log('close',await H('close'));
+await H('walk',[22.6,-2400,-Math.PI/2]);console.log('near armour',await H('near'));await H('use');console.log('buy armour 0',await H('buy',0));await H('close');
+await H('walk',[0,-2442.5,0]);console.log('near exit',await H('near'));console.log('use exit',await H('use'));
+console.log('fly with the new ship',await H('fly'));console.log('hub after flying',JSON.stringify(await q.evaluate(()=>window.__hub('x'))));
+console.log('errs',errs);await b.close()})();

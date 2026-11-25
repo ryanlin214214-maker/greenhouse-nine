@@ -1,0 +1,14 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const p=await b.newPage({viewport:{width:640,height:400}});p.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await p.addInitScript(()=>{const sp={log:[],active:[],silent:false,pend:[],tick(dt){},adv(dt){for(const a of sp.active.slice())if((a.rem-=dt)<=0){sp.active.splice(sp.active.indexOf(a),1);a.u.onend&&a.u.onend()}}};window.__sp=sp;
+ const V=[{name:'Voice A',lang:'en-US'},{name:'Voice B',lang:'en-GB'},{name:'Voice C',lang:'en-AU'},{name:'Voz',lang:'es-ES'}];
+ window.SpeechSynthesisUtterance=function(t){this.text=t};
+ Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{getVoices:()=>V,cancel(){sp.active.length=0},get speaking(){return sp.active.length>0},get pending(){return false},speak(u){sp.log.push({text:u.text,k:'',voice:u.voice&&u.voice.name,pitch:u.pitch,rate:u.rate});if(sp.silent)return;sp.active.push({u,rem:u.text.length*.06});u.onstart&&u.onstart()},onvoiceschanged:null,pause(){},resume(){}}})});
+await p.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await p.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await p.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+await p.goto('file://'+process.cwd()+'/gtest/n.html',{timeout:90000});await p.waitForTimeout(8000);
+console.log('button:',await p.evaluate(()=>document.getElementById('vox').textContent));
+await p.click('#go');await p.waitForTimeout(800);
+await p.evaluate(()=>window.__vset({on:true,ok:true}));console.log(await p.evaluate(()=>window.__vpause()));console.log('errs',errs);await b.close()})();

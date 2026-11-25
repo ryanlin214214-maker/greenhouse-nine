@@ -1,0 +1,14 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const q=await b.newPage({viewport:{width:1100,height:690}});q.setDefaultTimeout(900000);
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/'+process.argv[2],{timeout:240000});await q.waitForTimeout(4000);
+const X=c=>q.evaluate(c=>window.__x(c),c);
+await X("INTRO.on=false;setState('playing');window.__freeze=true;enemies.length=0");await q.evaluate(()=>window.__hub('enter'));await q.waitForTimeout(1500);
+console.log(await X(`(()=>{const t=Math.PI/2-.05;pos.set(HC.x+Math.sin(t)*792,112,HC.z-1100+Math.cos(t)*792);const o=[];
+ let t0=performance.now();update(1/30);o.push('update '+(performance.now()-t0).toFixed(0));t0=performance.now();hubTick(1/30);o.push('hubTick '+(performance.now()-t0).toFixed(0));
+ t0=performance.now();lightTick(1/30);o.push('lightTick '+(performance.now()-t0).toFixed(0));t0=performance.now();composer.render();o.push('render '+(performance.now()-t0).toFixed(0));
+ t0=performance.now();composer.render();o.push('render2 '+(performance.now()-t0).toFixed(0));t0=performance.now();renderer.getContext().finish();o.push('finish '+(performance.now()-t0).toFixed(0));return o.join(' | ')})()`));
+const t0=Date.now();await q.screenshot({path:'/tmp/p.png'});console.log('screenshot ms',Date.now()-t0);
+const t1=Date.now();await q.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));console.log('two rAF ms',Date.now()-t1);
+await b.close()})();

@@ -1,0 +1,12 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:900,height:560}});q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+await q.goto('file://'+process.cwd()+'/gtest/n.html',{timeout:120000});await q.waitForTimeout(8000);
+const E=f=>q.evaluate(f);
+await E(()=>window.__fly(2));
+for(const[st,z]of[[2,2600],[2,800],[3,4000],[3,1200]])console.log(await q.evaluate(([st,z])=>window.__place(st,z),[st,z]));
+await E(()=>window.__fly(3));console.log(await E(()=>window.__arriveAbove()));
+console.log('errs',errs);await b.close()})();

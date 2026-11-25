@@ -1,0 +1,14 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1000,height:640}});q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+await q.goto('file://'+process.cwd()+'/gtest/x.html',{timeout:120000});await q.waitForTimeout(8000);await q.click('#go');await q.waitForTimeout(800);
+const E=f=>q.evaluate(f);
+const shot=async(n)=>{await q.evaluate(()=>{window.__camOv=[33.2,1.6,10.5,30,1,6];for(const id of['hud','comms','cross','radar','overlay','cine','msg'])document.getElementById(id).hidden=true;window.__lt()});await q.waitForTimeout(50);await q.screenshot({path:'D_'+n+'.png',clip:{x:300,y:120,width:420,height:420}})};
+console.log(await E(()=>window.__kill1(5)));await E(()=>window.__anim(.2));await shot('0idle');
+console.log(await E(()=>window.__hit1()));await E(()=>window.__anim(.07));await shot('1hit');await E(()=>window.__anim(.5));
+console.log(await E(()=>window.__die1()));await E(()=>window.__anim(.1));await shot('2d01');await E(()=>window.__anim(.12));await shot('3d02');
+console.log(await E(()=>window.__anim(.12)));await shot('4d03');console.log(await E(()=>window.__anim(.4)));await shot('5d07');console.log(await E(()=>window.__anim(1.2)));await shot('6d19');
+console.log('errs',errs);await b.close()})();

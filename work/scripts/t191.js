@@ -1,0 +1,12 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1100,height:700}});q.setDefaultTimeout(180000);q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/n87.html',{timeout:180000});await q.waitForTimeout(9000);await q.evaluate(()=>document.getElementById('go').click());await q.waitForTimeout(1500);
+console.log(await q.evaluate(()=>window.__rowLook()));
+const I=await q.evaluate(()=>window.__rwSide(1.6,0));console.log(I);
+const [ry,x,y,z]=I,fx=Math.sin(ry),fz=Math.cos(ry);
+const cam=(d,h,side,ly)=>q.evaluate(c=>{window.__camOv=c},[x+fx*d+fz*side,y+h,z+fz*d-fx*side,x+fz*side*.3,y+ly,z-fx*side*.3]);
+await cam(-4.4,.5,-.9,.3);await q.waitForTimeout(2500);await q.screenshot({path:'H_pair.png',timeout:120000});
+await cam(-1.05,.72,-.15,.72);await q.waitForTimeout(2000);await q.screenshot({path:'H_face.png',timeout:120000});
+console.log('errs',errs);await b.close()})();

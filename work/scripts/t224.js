@@ -1,0 +1,26 @@
+// the outer deck ring: every leg must end within 1.5 m of its target unless marked as one that should be blocked
+const {chromium}=require('playwright');const fs=require('fs');
+const P=(t,r,la=0)=>[Math.sin(t)*r+Math.cos(t)*la,Math.cos(t)*r-Math.sin(t)*la].map(v=>+v.toFixed(1));
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:640,height:400}});q.setDefaultTimeout(600000);q.on('pageerror',e=>errs.push(e.message));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/'+(process.argv[2]||'t101x.html'),{timeout:240000});await q.waitForTimeout(6000);
+await q.evaluate(()=>window.__hub('enter'));await q.waitForTimeout(3000);
+let fail=0;const go=async(lab,[x,z],block,m)=>{const r=await q.evaluate(([x,z,m])=>window.__hubWalk(x,z,m),[x,z,m||3500]);const mm=/at (-?[\d.]+),(-?[\d.]+)/.exec(r);const d=mm?Math.hypot(+mm[1]-x,+mm[2]-z):99;
+  const ok=block?d>1.5:d<=1.5;if(!ok)fail++;console.log((ok?'PASS ':'FAIL ')+lab+(block?' (should block) ':' ')+r.replace(/ near=.*/,'')+' miss '+d.toFixed(1)+' zone '+await q.evaluate(()=>window.__x('hubZone()')))};
+const tp=([x,z])=>q.evaluate(([x,z])=>window.__tp(x,0,z-3500,0,0),[x,z]);
+await tp([14,965]);await go('plaza to ring',[200,940]);
+await go('ring to platform 1 root',P(.8,1172));await go('out onto platform 1',P(.8,1400));await go('off platform 1 side',P(.8,1400,60),true,800);
+await tp(P(.8,1180));await go('back to ring',P(.6,1060));await go('to H1 door (outside)',P(.4,1050));await go('through the door into H1',P(.4,1105));
+await go('through H1 side wall',P(.4,1105,110),true,800);
+await tp(P(1.2,1150));await go('past the rim',P(1.2,1300),true,1200);
+await tp(P(1.2,900));await go('into the terrace wall',P(1.2,800),true,800);
+await tp(P(-2.25,1180));await go('platform 4',P(-2.25,1300));
+await tp([200,940]);await go('ring back to the plaza',[14,965]);
+await tp([14,965]);await go('plaza round the concourse',[90,990]);await go('into the concourse side wall',[50,1030],true,600);await go('along the outside to hangar 0',[100,1060]);await go('into hangar 0 side wall',[60,1140],true,600);await go('into the back-wall strip',[72,1090],true,600);
+await tp([-90,990]);await go('into the concourse other side',[-50,1030],true,600);await tp([14,970]);await go('in through the plaza door',[0,1000]);
+await tp([60,1190]);await go('out of hangar 0 mouth sideways (should stop at the edge)',[60,1240],true,600);await tp([-60,1190]);await go('out of hangar 0 mouth, left side',[-60,1240],true,600);
+await tp([0,1190]);await go('out onto platform 0',[0,1260]);await go('off platform 0 side',[50,1260],true,600);
+await tp([100,1060]);await go('round the outside of hangar 0',[100,1180]);await go('past the rim behind hangar 0',[100,1260],true,600);
+console.log('transit',await q.evaluate(()=>window.__x("const L=HUB.pts.filter(p=>p.k==='tr');pos.set(L[0].x,0,L[0].z);for(let i=0;i<3;i++)update(1/30);const n0=HUB.near&&HUB.near.name;hubUse();const lx=pos.x-HC.x,lz=pos.z-(HC.z-1100);n0+' -> '+[lx.toFixed(0),lz.toFixed(0)]+' r '+Math.hypot(lx,lz).toFixed(0)+' '+hubZone()+' stops '+L.length")));
+console.log(fail?'FAILED '+fail:'ALL PASS');console.log('errs',errs.slice(0,5));await b.close()})();

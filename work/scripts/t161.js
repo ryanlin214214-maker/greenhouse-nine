@@ -1,0 +1,17 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const ctx=await b.newContext();const q=await ctx.newPage();q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+const url='file://'+process.cwd()+'/gtest/n.html';await q.goto(url,{timeout:120000});await q.waitForTimeout(6000);
+console.log('fresh: cont hidden',await q.evaluate(()=>document.getElementById('cont').hidden));
+await q.evaluate(()=>{localStorage.removeItem('gh9-save');localStorage.setItem('gh9-m2','1')});await q.reload();await q.waitForTimeout(8000);
+console.log('with m2=1:',await q.evaluate(()=>document.getElementById('cont').hidden+' "'+document.getElementById('cont').textContent+'" | menu '+window.__menu()));
+await q.click('#cont');await q.waitForTimeout(800);console.log('after Continue:',await q.evaluate(()=>window.__s2('info')));
+await q.evaluate(()=>{window.__s2('near');window.__fstep(.5);window.__s2('killall');window.__fstep(.5);window.__s2('hold');for(let i=0;i<6;i++){window.__s2('hold');window.__fstep(1)}window.__fstep(7);});
+await q.evaluate(()=>{for(let i=0;i<6;i++){window.__s2('killall');window.__fstep(3)}window.__fstep(40)});
+console.log('2-2 end:',await q.evaluate(()=>window.__fst()+' | '+document.getElementById('ovTitle').textContent+' | '+document.getElementById('go').textContent+' | m2='+localStorage.getItem('gh9-m2')));
+await q.click('#go');await q.waitForTimeout(500);await q.evaluate(()=>window.__fstep(1));console.log('after Continue to 2-3:',await q.evaluate(()=>window.__s3('info')));
+await q.reload();await q.waitForTimeout(8000);console.log('reload:',await q.evaluate(()=>'"'+document.getElementById('cont').textContent+'" | '+window.__menu()));
+console.log('errs',errs);await b.close()})();

@@ -1,0 +1,14 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:800,height:500}});q.setDefaultTimeout(900000);q.on('pageerror',e=>errs.push(e.message));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/'+process.argv[2],{timeout:240000});await q.waitForTimeout(4000);
+const X=c=>q.evaluate(c=>window.__x(c),c);
+const prof=`(()=>{renderer.info.autoReset=false;const m=()=>{renderer.info.reset();const t=performance.now();renderer.render(scene,cam);return {ms:Math.round(performance.now()-t),calls:renderer.info.render.calls,tris:renderer.info.render.triangles}};m();const a=m();
+ const sc=sun.castShadow;sun.castShadow=false;renderer.shadowMap.needsUpdate=true;m();const ns=m();sun.castShadow=sc;
+ const lights=[];scene.traverse(o=>{if(o.isLight&&o.visible)lights.push(o.type+(o.castShadow?'*':''))});
+ const big=[];scene.traverse(o=>{if(o.isMesh&&o.visible&&o.geometry){const n=(o.geometry.index?o.geometry.index.count:o.geometry.attributes.position.count)/3*(o.isInstancedMesh?o.count:1);if(n>20000)big.push([o.name||o.type,Math.round(n),o.castShadow?1:0])}});
+ return JSON.stringify({base:a,noShadow:ns,lights:lights.length,lightTypes:[...new Set(lights)],shadowLights:lights.filter(l=>l.endsWith('*')).length,big:big.slice(0,12)})})()`;
+await X(`INTRO.on=false;startAt(1,1);0`);await q.waitForTimeout(3000);console.log('thalassa',await X(prof));
+await X(`startAt(5,2);0`);await q.waitForTimeout(3000);console.log('europa42',await X(prof));
+console.log('errs',errs);await b.close()})();

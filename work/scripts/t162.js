@@ -1,0 +1,17 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1000,height:640}});q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+await q.goto('file://'+process.cwd()+'/gtest/x.html',{timeout:120000});await q.waitForTimeout(8000);await q.click('#go');await q.waitForTimeout(800);
+const fx=(k,t)=>q.evaluate(([k,t])=>window.__fx(k,t),[k,t]);
+const hide=()=>q.evaluate(()=>{for(const id of['hud','comms','cross','radar','overlay','cine','msg'])document.getElementById(id).hidden=true});
+const shot=async(n,c,w)=>{await q.evaluate(c=>{window.__camOv=c;window.__lt()},c);await hide();await q.waitForTimeout(w||1300);await q.screenshot({path:'X_'+n+'.png',clip:{x:76,y:58,width:848,height:532},timeout:120000})};
+await fx('setup');const C=[30,2.2,15,30,2,0];
+console.log(await fx('gl'));console.log(await fx('step',.1));await shot('boom0',C,60);
+console.log(await fx('step',.35));await shot('boom1',C,60);console.log(await fx('step',1.2));await shot('boom2',C,60);
+console.log(await fx('fire'));console.log(await fx('step',1.5));await shot('fire',[34,2.4,15,35,1.2,2]);
+console.log(await fx('walker'));console.log(await fx('step',.8));await shot('walker',[29,2,10,26,.8,3]);
+console.log(await fx('boss'));console.log(await fx('step',3));await shot('boss',[30,5,14,18,2,-6]);
+console.log('errs',errs);await b.close()})();

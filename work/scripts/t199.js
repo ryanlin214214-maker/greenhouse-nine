@@ -1,0 +1,14 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:640,height:400}});q.setDefaultTimeout(240000);q.on('pageerror',e=>errs.push(e.message));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/n93.html',{timeout:240000});await q.waitForTimeout(9000);
+await q.evaluate(()=>window.__hub('enter'));await q.waitForTimeout(3000);
+const go=(x,z,m)=>q.evaluate(([x,z,m])=>window.__hubWalk(x,z,m),[x,z,m]);const tp=(x,z)=>q.evaluate(([x,z])=>window.__tp(x,0,z-3500,0,0),[x,z]);
+for(const w of[[-15,1095],[0,1084],[0,1070],[4,1060],[4,1030],[-13,1028],[-19,1024]])console.log(await go(...w));
+for(const w of[[4,1030],[13,1028],[19,1024]])console.log(await go(...w));
+for(const w of[[4,1040],[4,1070],[0,1086],[22,1102]])console.log(await go(...w));
+console.log(await go(-40,1100));
+for(const w of[[0,1084],[0,1070],[4,1060],[4,990],[4,960]])console.log('plaza',await go(...w));console.log('plaza edge',await go(4,880,400));
+await tp(0,1150);console.log('out the mouth',await go(0,1300));
+console.log('errs',errs);await b.close()})();

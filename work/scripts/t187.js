@@ -1,0 +1,10 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1100,height:700}});q.setDefaultTimeout(180000);q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/n85r.html',{timeout:180000});await q.waitForTimeout(9000);await q.evaluate(()=>document.getElementById('go').click());await q.waitForTimeout(1500);
+await q.evaluate(()=>window.__fx('setup'));await q.evaluate(()=>window.__inv('play'));await q.waitForTimeout(1500);
+console.log('before',await q.evaluate(()=>window.__vmDbg()));await q.screenshot({path:'GD_0.png'});
+await q.keyboard.press('KeyI');await q.waitForTimeout(1500);await q.keyboard.press('KeyI');await q.waitForTimeout(1500);
+console.log('after loadout',await q.evaluate(()=>window.__vmDbg()));await q.screenshot({path:'GD_1.png'});
+console.log('errs',errs);await b.close()})();

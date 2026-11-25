@@ -1,0 +1,16 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1000,height:640}});q.on('pageerror',e=>errs.push(e.message));
+await q.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+await q.goto('file://'+process.cwd()+'/gtest/x.html',{timeout:90000});await q.waitForTimeout(8000);await q.click('#go');await q.waitForTimeout(800);
+const info=await q.evaluate(()=>window.__gunFreeze());console.log(info);
+await q.evaluate(()=>{for(const id of['hud','comms','cross','radar','overlay','cine'])document.getElementById(id).hidden=true});
+const P=JSON.parse('['+info.split(' | ')[1].split(' ; ').map(x=>'['+x.split(':')[0]+',['+x.split(':')[1]+']]').join(',')+']');
+const R=info.split(' | ')[0].replace('rowan ','').split(',').map(Number);
+const shot=async(name,t,side)=>{const c=t;await q.evaluate(a=>{window.__camOv=a;window.__lt()},[c[0]+side,c[1]+.35,c[2],c[0],c[1]+.2,c[2]]);await q.waitForTimeout(1500);await q.screenshot({path:'h_'+name+'.png'})};
+await shot('rowan_side',R,2.1);await shot('rowan_front',[R[0],R[1],R[2]+2.2],0);
+const tr=P.find(x=>x[0]===5)[1];await shot('trooper_side',tr,2.1);
+const sn=P.find(x=>x[0]===8)[1];await shot('sniper_side',sn,2.4);
+console.log('errs',errs);await b.close()})();

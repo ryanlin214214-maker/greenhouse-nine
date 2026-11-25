@@ -1,0 +1,15 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const p=await b.newPage({viewport:{width:1100,height:680}});p.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await p.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await p.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await p.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+await p.goto('file://'+process.cwd()+'/gtest/x.html',{timeout:120000});await p.waitForTimeout(8000);await p.evaluate(()=>window.__vset({on:false}));
+await p.screenshot({path:'z_menu.png'});
+await p.evaluate(()=>window.__jump(1,2));await p.evaluate(()=>{window.__camOv=[0,1.7,24,0,9,-40]});await p.waitForTimeout(2500);await p.screenshot({path:'z_commons.png'});
+await p.evaluate(()=>{window.__camOv=[0,2.5,-232,0,2,-262]});await p.waitForTimeout(2500);await p.screenshot({path:'z_bridge.png'});await p.evaluate(()=>{window.__camOv=null});
+await p.evaluate(()=>window.__l2cine());await p.evaluate(()=>window.__introAt(4.5+3));await p.waitForTimeout(2500);await p.screenshot({path:'z_cmd.png'});await p.evaluate(()=>window.__introAt(4.5+23+3));await p.waitForTimeout(2500);await p.screenshot({path:'z_europa.png'});
+await p.keyboard.press('Space');await p.waitForTimeout(800);
+console.log(await p.evaluate(()=>window.__farView(1500,600,4000,Math.PI*0.75,0.05)));await p.waitForTimeout(2500);await p.screenshot({path:'z_far1.png'});
+console.log(await p.evaluate(()=>window.__farView(-3000,-400,-5000,0.4,-0.25)));await p.waitForTimeout(2500);await p.screenshot({path:'z_far2.png'});
+console.log('errs',errs);await b.close()})();

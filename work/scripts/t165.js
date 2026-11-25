@@ -1,0 +1,15 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1000,height:640}});q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+await q.goto('file://'+process.cwd()+'/gtest/n.html',{timeout:120000});await q.waitForTimeout(8000);
+const E=f=>q.evaluate(f);const s2=c=>q.evaluate(c=>window.__s2(c),c);const step=t=>q.evaluate(t=>window.__fstep(t),t);
+const hide=()=>q.evaluate(()=>{for(const id of['msg','comms'])document.getElementById(id).hidden=true});
+await E(()=>window.__fly(2));await step(.5);
+await E(()=>window.__halcView());
+await step(3);await hide();await q.screenshot({path:'Z_halc.png',timeout:120000});
+await E(()=>window.__flyBoomNear());await step(.15);await hide();await q.screenshot({path:'Z_boom.png',timeout:120000});await step(1.2);await hide();await q.screenshot({path:'Z_boom2.png',timeout:120000});
+await E(()=>window.__dmgView());await step(3);await hide();await q.screenshot({path:'Z_dmg.png',timeout:120000});
+console.log(await E(()=>window.__pf()));console.log('errs',errs);await b.close()})();

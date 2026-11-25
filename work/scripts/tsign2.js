@@ -1,0 +1,11 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const q=await b.newPage({viewport:{width:900,height:560}});q.setDefaultTimeout(240000);q.on('pageerror',e=>console.log('ERR',e.message));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/t103x.html',{timeout:240000});await q.waitForTimeout(5000);
+await q.evaluate(()=>window.__rowLook&&window.__rowLook());await q.waitForTimeout(500);
+await q.evaluate(()=>window.__x("INTRO.on=false;setState('playing');window.__freeze=true;enemies.length=0"));await q.evaluate(()=>window.__hub('enter'));await q.waitForTimeout(2000);
+const t=.4,r=1058;await q.evaluate(([x,z])=>window.__x(`pos.set(HC.x+${x},0,HC.z-1100+${z});yaw=.4+Math.PI;pitch=.35;for(let i=0;i<4;i++)update(1/30);eye.set(pos.x,pos.y+EYE,pos.z)`),[Math.sin(t)*r,Math.cos(t)*r]);
+await q.waitForTimeout(2500);await q.screenshot({path:'sg1.png'});
+console.log(await q.evaluate(()=>window.__x(`const L=[];const P=new T.Vector3();HUB.g.traverse(o=>{if((o.isMesh||o.isSprite)&&o.visible){o.getWorldPosition(P);const lx=P.x-HC.x,lz=P.z-(HC.z-1100);if(Math.hypot(lx-417.8,lz-988.1)<12&&P.y>7&&P.y<16)L.push(o.type+' '+(o.geometry&&o.geometry.type)+' '+[lx.toFixed(1),P.y.toFixed(1),lz.toFixed(1)].join(',')+' rot '+o.rotation.toArray().slice(0,3).map(v=>(+v).toFixed(2)).join(',')+' side '+(o.material&&o.material.side)+' tr '+(o.material&&o.material.transparent))}});L.join('\\n')`)));
+await b.close()})();

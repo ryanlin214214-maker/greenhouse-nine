@@ -1,0 +1,10 @@
+const {chromium}=require('playwright');const fs=require('fs');const page=process.argv[2];
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1000,height:640}});q.on('pageerror',e=>errs.push(e.message));
+await q.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+await q.goto('file://'+process.cwd()+'/gtest/'+page+'.html',{timeout:90000});await q.waitForTimeout(8000);await q.click('#go');await q.waitForTimeout(800);
+await q.evaluate(()=>window.__ie());await q.waitForTimeout(1500);console.log('empty',await q.evaluate(()=>window.__info()));
+console.log('alive',await q.evaluate(()=>window.__crowd()));await q.waitForTimeout(2500);console.log('crowd',await q.evaluate(()=>window.__info()));
+console.log('errs',errs);await b.close()})();

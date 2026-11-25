@@ -1,0 +1,22 @@
+const {chromium}=require('playwright');const fs=require('fs');const P=Math.PI;
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1250,height:780}});q.setDefaultTimeout(240000);q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/'+process.argv[2],{timeout:240000});await q.waitForTimeout(5000);
+await q.evaluate(()=>window.__rowLook&&window.__rowLook());await q.waitForTimeout(500);
+const X=c=>q.evaluate(c=>window.__x(c),c);const shot=async(n,w)=>{await q.waitForTimeout(w||2500);await q.screenshot({path:'fx/'+n+'.png'})};
+await X("INTRO.on=false;setState('playing');window.__freeze=true;enemies.length=0;for(let i=0;i<4;i++)update(1/30)");
+await q.addStyleTag({content:'#comm{display:none!important}'});
+const pose=(x,z,yw,pt)=>X(`pos.set(${x},0,${z});vy=0;yaw=${yw};pitch=${pt||-.03};for(let i=0;i<8;i++)update(1/30);eye.set(pos.x,pos.y+EYE,pos.z)`);
+await pose(88,96,-P/2,.1);await X("const B=ATMO.beac;ATMO.beac=[];for(const b of B)b.q.material.opacity=.9;window.__B2=B");await shot('eng_beacons',800);await X("ATMO.beac=window.__B2");
+await pose(28,64,P/2,-.05);await shot('eng_steam',5000);
+await pose(0,160,P,-.15);await shot('hangar_guides',1800);
+await q.setViewportSize({width:420,height:800});await X("say('Ember Ronin · click or melee to slash',8,'#ff8a3a')");await shot('announce_phone',1200);await q.setViewportSize({width:1250,height:780});
+await q.evaluate(()=>window.__hub('enter'));await q.waitForTimeout(2500);await X("msgT=0");
+await X(`pos.set(0,0,1112-3500);yaw=Math.PI;pitch=-.12;for(let i=0;i<6;i++)update(1/30);eye.set(pos.x,pos.y+EYE,pos.z)`);await shot('m_guides',2000);
+await X(`pos.set(-24,0,1012-3500);yaw=Math.PI/2;pitch=.08;for(let i=0;i<6;i++)update(1/30);eye.set(pos.x,pos.y+EYE,pos.z)`);await shot('m_cannon',2500);
+await X(`pos.set(25,0,996-3500);yaw=0;pitch=0;for(let i=0;i<6;i++)update(1/30);eye.set(pos.x,pos.y+EYE,pos.z)`);await shot('m_helmets',2500);
+await X("hubLaunch();for(let i=0;i<240;i++)update(1/30);const S=FLY;const O=S.org;S.ph='free';S.pos.set(O.x,26,O.z+1700);S.h=0;S.p=0;S.spd=0;S.thr=0;yaw=0;pitch=-.02;S.camR=0;S.roll=0;for(let i=0;i<6;i++)update(1/30);"+
+ "const d=new T.Vector3(0,0,-1);for(let k=0;k<4;k++){const p=S.pos.clone().addScaledVector(d,30+k*12);p.x+=-6+k*4;p.y+=2+k;flyShot(p,new T.Vector3(.2,0,1).normalize(),0,FBOLT,4,.3,0,false)}const p2=S.pos.clone().addScaledVector(d,32);p2.x+=8;p2.y+=1;flyShot(p2,d,0,FTRC,7,.13,0,true);state='paused';msgT=0");
+await shot('space_bolts',1500);
+console.log('errs',errs.slice(0,5));await b.close()})();

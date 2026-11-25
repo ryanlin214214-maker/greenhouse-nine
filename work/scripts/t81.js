@@ -1,0 +1,12 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1100,height:680}});q.on('pageerror',e=>errs.push(e.message));
+await q.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+await q.goto('file://'+process.cwd()+'/gtest/x.html',{timeout:90000});await q.waitForTimeout(8000);await q.click('#go');await q.waitForTimeout(800);
+console.log(await q.evaluate(()=>window.__rowLook()));
+await q.evaluate(()=>{window.__camOv=[-2.5,1.8,16,1.5,1.3,6];window.__lt()});await q.waitForTimeout(2500);await q.screenshot({path:'r_wide.png'});
+await q.evaluate(()=>{window.__camOv=[5.2,.55,13.2,3,.55,10]});await q.waitForTimeout(2000);await q.screenshot({path:'r_feet.png'});
+await q.evaluate(()=>{window.__camOv=[0.4,1.7,13,3,1.8,10]});await q.waitForTimeout(2000);await q.screenshot({path:'r_face.png'});
+console.log('errs',errs);await b.close()})();

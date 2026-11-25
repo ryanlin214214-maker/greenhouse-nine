@@ -1,0 +1,10 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const q=await b.newPage({viewport:{width:900,height:560}});q.setDefaultTimeout(900000);
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/'+process.argv[2],{timeout:240000});await q.waitForTimeout(4000);
+const X=c=>q.evaluate(c=>window.__x(c),c);
+await X(`INTRO.on=false;setState('playing');0`);await q.evaluate(()=>window.__hub('enter'));await q.waitForTimeout(1500);
+await X(`WAL.ship='kestrel';hubLaunch();for(let i=0;i<400&&FLY.ph!=='free';i++){update(1/30);flyCam(1/30)};comm('R',"It's launched a missile! Break hard and keep turning in tight circles!");0`);await q.waitForTimeout(3000);
+const r=await q.evaluate(()=>{const o=[];for(const el of document.querySelectorAll('.comms,#comm,#comms,.obj,#obj,.msg')){const b=el.getBoundingClientRect();o.push([el.id||'',el.className,el.hidden,Math.round(b.top),Math.round(b.bottom),Math.round(b.left),Math.round(b.width),getComputedStyle(el).display])}return JSON.stringify(o)});console.log(r);
+await q.screenshot({path:'ships/diag_comm.png'});await b.close()})();

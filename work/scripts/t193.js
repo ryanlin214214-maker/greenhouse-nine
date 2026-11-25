@@ -1,0 +1,13 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1100,height:700}});q.setDefaultTimeout(180000);q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/n87.html',{timeout:180000});await q.waitForTimeout(9000);await q.evaluate(()=>document.getElementById('go').click());await q.waitForTimeout(1500);
+console.log(await q.evaluate(()=>window.__rowLook()));
+console.log(await q.evaluate(()=>window.__helmLine(-2.4,.95,9.5)));
+await q.evaluate(()=>{window.__camOv=[-2.4,1.3,12.6,-2.4,1.0,9.5]});await q.waitForTimeout(2500);await q.screenshot({path:'H_line.png',timeout:120000});
+await q.evaluate(()=>{window.__camOv=[-2.4,1.7,11.3,-2.4,1.62,9.5]});await q.waitForTimeout(2000);await q.screenshot({path:'H_lineC.png',timeout:120000});
+const I=await q.evaluate(()=>window.__rwSide(1.6,0));const [ry,x,y,z]=I,fx=Math.sin(ry),fz=Math.cos(ry);
+await q.evaluate(c=>{window.__camOv=c},[x-fx*4.4-fz*.9,y+.5,z-fz*4.4+fx*.9,x-fz*.27,y+.3,z+fx*.27]);await q.waitForTimeout(2500);await q.screenshot({path:'H_pair.png',timeout:120000});
+await q.evaluate(()=>{window.__camOv=null});await q.keyboard.press('KeyI');await q.waitForTimeout(3000);await q.screenshot({path:'H_gear.png',timeout:120000});
+console.log('errs',errs);await b.close()})();

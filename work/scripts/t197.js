@@ -1,0 +1,15 @@
+const {chromium}=require('playwright');const fs=require('fs');const V=process.argv[2];
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:900,height:620}});q.setDefaultTimeout(180000);q.on('pageerror',e=>errs.push(e.message));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/'+V+'.html',{timeout:180000});await q.waitForTimeout(9000);await q.evaluate(()=>document.getElementById('go').click());await q.waitForTimeout(1500);
+await q.evaluate(()=>window.__rowLook());await q.evaluate(()=>window.__rwSide(-2.5,-1));await q.evaluate(()=>window.__mt({at:[-8,1.05,2],ry:.6}));
+const S=async(n,c,w)=>{await q.evaluate(c=>{window.__camOv=c},c);await q.waitForTimeout(w||2500);await q.screenshot({path:'P_'+V+'_'+n+'.png',timeout:120000})};
+await S('robot',[-6.6,1.6,3.6,-8,1.3,2],4000);
+await S('floor',[-4,1.7,6,-8,0,-2]);
+await S('wall',[-60,2,30,-70,2,38]);
+await S('hangar',[-36,3.2,176,-30,1.5,190]);
+await S('hfloor',[0,1.8,200,6,0,212]);
+await q.evaluate(()=>window.__hub('enter'));await q.waitForTimeout(6000);
+await S('hub',[10,2.2,-2440,22,1.8,-2410],3500);
+console.log('errs',errs);await b.close()})();

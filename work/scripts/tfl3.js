@@ -1,0 +1,15 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const q=await b.newPage({viewport:{width:900,height:560}});q.setDefaultTimeout(240000);q.on('pageerror',e=>console.log('ERR',e.message));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/t99x.html',{timeout:240000});await q.waitForTimeout(5000);
+await q.evaluate(()=>window.__rowLook&&window.__rowLook());await q.waitForTimeout(500);
+await q.evaluate(()=>window.__x(`INTRO.on=false;setState('playing');window.__freeze=true;enemies.length=0;pos.set(0,0,20);yaw=0;pitch=-.3;for(let i=0;i<10;i++)update(1/30)`));
+await q.addStyleTag({content:'#hud,#obj,.vh{display:none!important}'});
+const meas=async n=>{await q.waitForTimeout(2200);const buf=await q.screenshot({clip:{x:300,y:420,width:300,height:100}});fs.writeFileSync('m_'+n+'.png',buf);console.log(n)};
+await meas('base');
+await q.evaluate(()=>window.__x(`for(const m of[MAT.laneA,MAT.laneB,MAT.laneF])m.color.setHex(0xff00ff)`));await meas('laneMagenta');
+await q.evaluate(()=>window.__x(`for(const m of[MAT.laneA,MAT.laneB,MAT.laneF])m.color.set(lin(0x6b767d))`));
+await q.evaluate(()=>window.__x(`window.__h0=hemi.intensity;lightTick=(()=>{const o=lightTick;return function(dt){o(dt);hemi.intensity=window.__h0*3}})()`));await meas('hemi3');
+console.log(await q.evaluate(()=>window.__x(`JSON.stringify({gtao:typeof gtao!=='undefined'&&!!gtao,passes:composer&&composer.passes.map(p=>p.constructor.name+':'+p.enabled),env:scene.environment&&scene.environment.type,bg:!!scene.background,fog:scene.fog&&[scene.fog.near,scene.fog.far,scene.fog.color.getHexString()]})`)));
+await b.close()})();

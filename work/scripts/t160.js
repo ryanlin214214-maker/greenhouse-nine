@@ -1,0 +1,20 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1000,height:640}});q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/three.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/three/build/three.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.route('**/examples/js/**',r=>{const f='node_modules/three/examples/js/'+r.request().url().split('/examples/js/')[1];r.fulfill({body:fs.readFileSync(f,'utf8'),contentType:'text/javascript'})});
+await q.goto('file://'+process.cwd()+'/gtest/'+(process.argv[2]||'n.html'),{timeout:120000});await q.waitForTimeout(8000);
+const E=f=>q.evaluate(f);const s3=c=>q.evaluate(c=>window.__s3(c),c);const step=t=>q.evaluate(t=>window.__fstep(t),t);
+console.log('menu',await E(()=>window.__menu()));
+console.log('start',await E(()=>window.__fly(3)));console.log(' ',await s3('info'));
+await s3('view');await step(.2);await q.screenshot({path:'M_station.png'});
+await E(()=>window.__fly(3));await s3('face');await s3('boost');let t=0;for(;t<60;t+=2){const i=JSON.parse(await step(2));const s=JSON.parse(await s3('info'));if(t%6===0)console.log('run t='+(t+2),s.ph,'along',s.along,'mph',i.mph,'hp',s.hp,'sh',s.sh,'en',s.en,'mines',s.mines);if(s.ph!=='run'||i.state!=='playing')break;await s3('face')}
+console.log('after the run',await s3('info'),await E(()=>window.__fst()));await q.screenshot({path:'M_run.png'});
+await E(()=>window.__fly(3));await s3('noboost');await s3('at');await step(1);console.log('past blockade',await s3('info'));
+await step(4);await s3('bay');await step(1);await q.screenshot({path:'M_bay.png'});await step(3);console.log('at the bay',await s3('info'));
+for(let i=0;i<8;i++){await step(2);if(i===2)await q.screenshot({path:'M_inbay.png'})}console.log('end',await E(()=>window.__fst()+' | '+document.getElementById('ovTitle').textContent+' | '+document.getElementById('go').textContent+' | m2 '+JSON.stringify(localStorage.getItem('gh9-m2'))));
+await q.screenshot({path:'M_done.png'});
+console.log('ring crash',await E(()=>{window.__fly(3);return 1}),await s3('ring'),await step(2),await s3('info'));
+console.log('menu after',await E(()=>window.__menu()));
+console.log('errs',errs);await b.close()})();
