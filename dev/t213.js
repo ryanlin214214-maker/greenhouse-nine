@@ -1,0 +1,15 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1100,height:660}});q.setDefaultTimeout(240000);q.on('pageerror',e=>errs.push(e.message));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/'+process.argv[2],{timeout:240000});await q.waitForTimeout(6000);
+await q.evaluate(()=>window.__rowLook&&window.__rowLook());await q.waitForTimeout(800);
+await q.addStyleTag({content:'.cine,#msg,.fcard,#comm{display:none!important}'});
+const look=async(n,code)=>{await q.evaluate(c=>window.__x(c),code);await q.waitForTimeout(4000);await q.screenshot({path:'B_'+n+'.png'})};
+console.log(await q.evaluate(()=>window.__x("INTRO.on=false;setState('playing');flyStart(2);for(let i=0;i<60;i++)update(1/30);FC.on=false;const S=FLY;JSON.stringify([S.ph,enemies.length,enemies.map(e=>e.kind).join(',')])")));
+const face="const S=FLY;const P=window.__P;const dx=P.x-S.pos.x,dy=P.y-S.pos.y,dz=P.z-S.pos.z;S.h=Math.atan2(-dx,-dz);S.p=Math.atan2(dy,Math.hypot(dx,dz));yaw=S.h;pitch=S.p;S.camR=0;S.roll=0;S.spd=0;S.thr=0;for(let i=0;i<4;i++)update(1/30)";
+await look('pods',"const H=FLY.halc;const pod=enemies.find(e=>e.kind==='pod');window.__P=(pod?pod.g.position:H.g.position).clone();FLY.pos.copy(window.__P).add(new T.Vector3(60,30,90));"+face);
+await look('halc',"const H=FLY.halc;window.__P=H.g.position.clone();FLY.pos.copy(window.__P).add(new T.Vector3(150,80,400));"+face);
+await look('dg',"window.__P=FLY.pos.clone().add(new T.Vector3(-3100,520,-900));"+face);
+await look('decks',"window.__P=FLY.pos.clone().add(new T.Vector3(900,-60,-1300));"+face);
+console.log('errs',errs.slice(0,4));await b.close()})();

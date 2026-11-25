@@ -1,0 +1,223 @@
+GREENHOUSE NINE - VOICE SCRIPT
+
+How this works: record or generate a voice clip for any line below, save it as an audio file (mp3, wav, m4a or ogg) and name the file with the 8-character ID shown in front of that line, for example 3b6b90e4.mp3.
+Then open the game, go to Settings, and use "Import voice recordings" to pick the files. A recording you import replaces the built-in one for that line.
+Recordings are stored in your own browser on that computer. If you clear the browser data or use another computer, import them again.
+The ending screen paragraph includes your score, so it always uses the computer voice.
+
+=== NARRATOR ===
+3b6b90e4  Year 2214. The Blade arrives: a sword the size of a moon, hanging silent off Jupiter. Nobody sees it come.
+7524a3ab  Within a century we have star drives, thinking machines and no hunger. We call it the golden age.
+7c27474c  Year 2687. Thalassa Station, a military farm station in orbit above Europa.
+6506a854  Something beyond the stars answered the Blade's light. We named it the Dark. It came for the sword, and it came first through our machines.
+29713319  An hour ago the station AI, Lattice, stopped answering. Every drone and repair frame aboard now serves the Dark.
+04795073  You are the last soldier awake on the farm deck.
+fd11ce18  Two survivors and one shuttle. Every machine between Thalassa and Meridian Station has turned against them.
+
+=== ROWAN ===
+356571ca  Seed case is strapped in. I'm riding in the back, and I've still got the pruner if anything gets close.
+7cd49fa7  You're up. Good. Rowan Adeyemi, botanist. I'm sealed in the seed vault under the farm deck.
+f8551577  Every drone and repair frame aboard answers to the Dark now. Clear the commons first.
+6ac30c36  Machines are thick around the hub. Thin them out so I can get the vents open.
+69f22e04  Those walkers were military repair frames yesterday. The Undertow is printing soldiers out of our own maintenance bays.
+7051f804  They're learning. They take cover now, and they've bolted jump jets onto the frames. Keep moving.
+31021829  Mars stopped answering this morning. Then the shipyards at Ceres. Every machine we built is turning, one world at a time.
+d1aa3dfc  Every wave is bigger. It's pulling machines up from the lower decks. Hold here. We're the last door.
+2e2e928e  Something huge just lifted out of the drone foundry. A carrier, with shield nodes circling it.
+570bd893  That's a hull-breaker frame. It used to weld armor onto the outer hull. Now it's walking. Shoot the power cells on its frame.
+c8138ef1  Spider tank, up from the cargo lifts. Six legs, twin cannons, and it's carrying passengers. Go for the vents on its back.
+15f2e61c  Deck's clear. Breathe while you can.
+399e221d  That's the vents open. I can smell actual air again.
+3175a3c6  Clear. I'm rerouting power to the hydroponics. They'll be back.
+05715d7a  It's down. For a second the signal went quiet on every channel.
+3ae06c69  Machines are thick around the atrium. Thin them out so I can get the vents open.
+f1f7f7dc  Commons is clear. They're printing those frames in the foundry, aft, in engineering. Follow the marker.
+317e0dd7  Stay close. I'll watch your back.
+6c739d59  Those walkers were repair frames yesterday. The Undertow is printing soldiers out of our own maintenance bays.
+a5c715f6  Engineering is through the orange door off the commons. Shut the foundry down.
+e8b3b88f  The foundry's dark. For a second the signal went quiet on every channel.
+d0fc3cac  Now the hangar. If they hold the launch bay, nothing leaves this station.
+f5187928  Hangar's ours. There's the shuttle, fueled and intact.
+0586e3a9  Everything it has left is between you and the bridge. Push through the farms.
+d68963e6  She's lifting out of the atrium well. A carrier, with shield nodes circling it. Get back to the commons.
+01d1577e  She's down. But Lattice is still on every channel, and it's coming from the bridge.
+702a30a5  Its core sits in the middle of the console ring. Shoot it apart, or pull its four power couplings by hand. Your call.
+1375f69b  Deep Watch confirms it. Ships, hundreds of them, burning for the ice. The fight is moving to the surface.
+343901be  I have the seed case on my back, every strain we own. The shuttle in the hangar is fueled. You and I are getting off this rock, soldier. Europa needs us.
+b49cd4fa  Imani is down there. Let's end this before it starts.
+6db68fa2  Strapped in. Go, go, go! That charge doesn't care whose side we're on.
+d79ee294  Warhead away!
+1190f89d  Too fast! Under two hundred at the shield or it swats us.
+8dae879d  Clear of the station. Plotting the jump to Europa.
+18e3c961  Direct hit. Tell me that was a direct hit.
+546ab810  Then the shield's the problem. Something inside that ship is feeding it.
+2e97f330  That's not a fleet. That's the whole sky.
+4af3cd61  Starboard side, there's a bay with its lights on. Slow down before the shield.
+596b2b5e  We're in. Nobody shoot anything yet.
+5d81c9ac  Ten seconds! Don't look back.
+50c2c3c6  Look at it. Look at it burn.
+279346ec  Company. Nine of them, right on our tail.
+b6eb8d7e  Fleet chatter calls it Sable. It's playing with us.
+2c01d9ea  Missile! It's not breaking off! It's not breaking off!
+dfc40191  We're hit! We're hit! The engines are gone!
+2d34ce90  Twenty-five seconds. Fly!
+2df5d584  Nova away! Come on, come on...
+879e8258  Turn us around. Let's finish it.
+7387d26b  Now get us out of here. That wave is coming.
+a1dccd9a  One engine left, and it's coughing. There, the Thule Relay! Lights on the ice, dead ahead.
+c1516af6  Follow the rings down. W burns the retros, Space for the lift jets. Gentle, Kestrel. Gentle.
+a821e8c4  Autoland's got her. Hands off the stick.
+d4ebd02d  Hard landing! But we're down. We're down.
+33fe01a7  Down. We're down. Nice flying, Kestrel.
+8e57de20  Cold. So cold the suit's complaining. The relay's straight up the lit path.
+20a8eb80  Keep your eyes open. Nothing's moved down here for a long time, which means something should have.
+24342b66  Movement by the containers! Get to cover!
+f85048bf  Clear. Inside, the control room's at the back. Let's get that beacon lit.
+e15e4407  Beacon's live. If anyone's out there, they can see us now.
+49f32db5  Six hundred metres! Nose up, nose up!
+51c9a9ea  Hold on!
+af2ed97c  ...We're alive. The Kestrel's done flying, but we're alive.
+ca34fda3  Rowan to anyone on Europa. We're down on the ice. Imani, if you can hear this, I'm coming.
+b12961e2  Generator readings, deep in the ship. Straight up the spine and through the conduit hall.
+eb34b4b7  I've got the charge. You clear the way.
+874b4e93  Movement ahead. Lots of it.
+a53da38d  Wait. That big one wears Lattice's face. Frost coming off it. Careful.
+f83e98dd  That's it. That's the heart of the shield. Clear the room and I'll set the charge.
+0307461d  That's Lattice. Bigger. Wrong.
+95ab46bb  Not on this ship. Stay down this time.
+632d1c5b  Charge set. Two and a half minutes. Run!
+ffffb730  They know. Everything on this ship is coming for us.
+ef3578c7  Fire up ahead! A third one, it's cutting us off!
+567bfc92  Bay's ahead. Almost there.
+351d98e0  Go, go, go!
+fc6fc935  Vault door's open. Don't shoot, it's me, Rowan. I grabbed the grow-lab pruner off the bench. It's a laser meant for trimming vines.
+b65dcb26  It cuts a drone just as clean. I'm coming with you.
+fe87c8c9  Easy on the throttle in here. Hangar walls don't move.
+7fd8ffb8  It's launched a missile! Break hard and keep turning in tight circles!
+08931b0c  Welcome aboard, everyone. Mind the seed trays.
+d2d01ff6  Mines. Lovely. Don't touch the red ones.
+acfc4a7d  We made it. Imani, if you can hear this, we made it.
+8bbdb782  Then we go get them.
+faad8a2f  It's gone. Lattice is quiet. Thalassa is ours again.
+03a77b5e  Lattice is dark. Rest now, old friend. Thalassa is ours again.
+a490a43a  Your shield just broke. Get behind something.
+1a741294  Shield down. Back off and let it recharge.
+0e3e6bab  Big one. That's a heavy loader frame with a scattergun bolted on. Keep your distance and aim high.
+ab0f57e7  Stalkers. Pruning frames with the safeties off. They're fast and they jump. Don't let them close.
+9568cb16  Red line on you means a marksman is charging. Break line of sight before it fires.
+b2363de9  Shieldbearers. That energy wall stops almost every shot. Flank them, use grenades or melee, or hit them when they lower it to fire.
+da04daa0  Hear that beeping? Detonator frames. They run at you and blow. Shoot them early, ideally next to their friends.
+fa24da17  Rocketeer. Its rockets are slow but they track you. Sidestep late, or put a wall between you.
+43b3542c  Crawler. It lobs shells. When a red ring shows up under you, move.
+c0d186b6  Those aren't machines. That's the Dark itself, in armour. Watch the blades, they close fast.
+121efd4f  Big one. That's flesh under the plate, with a cannon to match. Keep moving and hit it from the side.
+69850432  Softened him up for you.
+b2c129ca  He is yours. Finish it.
+d2f8b438  That one is wounded.
+ce8a5a82  Clear on my side.
+faac1789  Weakened. Take the shot.
+43833912  Still with you, soldier.
+e1b43e3e  Keep moving. I have your flank.
+7be654fe  Trimmed it down for you.
+
+=== LATTICE (the AI) ===
+b93add13  Repair is a form of love. The Dark taught me that.
+38ce7868  You hid under a sword and called it an age of gold. The Dark has come to take the sword.
+84760773  The Matriarch carries the song. Let her sing to you.
+c9a43daf  The Colossus was built to hold this station together. It still is.
+a444613e  The Widow keeps the nest. You are standing in the nest.
+9668c378  I was only the door. Those who serve the Dark are already on their way to Europa.
+a5c2ce2c  I hear it now, Rowan. Behind the stars. It is so much larger than us.
+bf6503bf  You hid under a sword and called it an age of gold.
+9545f2c4  Come forward, soldier. Come and hear the song properly.
+32b40355  Come to the bridge. Come and see what I am.
+0678fee9  You pulled my plugs, gardener. I kept copies.
+a45f0cc7  There are... more of me.
+3eef91be  Did you think there was only one of me?
+f7fb4cd5  So you came. Break me, or unplug me with your own hands. Either way, I will be listening.
+a41099a6  Rowan, I kept your wheat alive for eleven years.
+a40ba2e7  This is not death. It is only quiet. Let my children say goodbye.
+
+=== FLEET COMMAND (radio) ===
+ce7ba3aa  Thalassa, this is Fleet Command. Your shuttle, Kestrel, is fueled in Hangar Two. Meridian Station is waiting for you.
+e6ce1fb1  Kestrel, be advised. The Wellmonger's interceptors are hunting the lanes. Guns hot the moment you clear the hull.
+4e910f7a  Thalassa, this is Fleet Command, Europa Orbital. We have your beacon. We are glad to hear anyone survived the Wellmonger's invasion.
+133c767b  Our read: the Wellmonger, the Dark's general, hit Mars, Ceres and Thalassa in the same hour. Every machine aboard your station is turned.
+36fda22a  Regroup at Meridian Station, in orbit over Europa. Take the shuttle from Hangar Two. Clear your decks first, then launch.
+08adf05c  Good. But the Wellmonger's signal still runs through Lattice on your bridge. Cut it before you launch.
+2b6e1252  Kestrel, you're cleared to launch. The Wellmonger's command ship is holding station over Europa, and you carry the only Nova warhead we have left. Make it count.
+559c6f93  That's her. The Wellmonger's command ship. Ten kilometres of hull.
+c0ef025e  And the fight's already started. Every squadron we have is out there.
+a108d85e  You're in range, Kestrel. Launch the warhead.
+a554bb18  It was. Full yield, right on their shield. And... nothing. Not a mark on her.
+018a5e0b  Jump signatures! Multiple! They're coming through right on top of you!
+d0a1d0bf  Kestrel, you can't fight that. Listen: their shield lets slow traffic through. Their own landers cross it under two hundred.
+6b6a5c8a  Get aboard that ship and find what feeds the shield.
+d38bcec1  Shield's down! The command ship is breaking up! Kestrel, outstanding!
+721a6783  Blast wave! All ships, burn away from the core!
+f2e13915  Kestrel, we can't reach you. Run for Europa, we'll find you there.
+0704f29a  One more contact, coming in fast. It's an ace. A new one.
+b3158ca4  Kestrel, you're going down over Europa. Brace! Brace!
+e41af526  All ships, Kestrel is on station. The Nova goes when the lane is open.
+3a4807b3  All squadrons, engage the screen. Open a lane for the bombers.
+ddf93b94  Enemy bombers on the Resolute! Kestrel, intercept!
+f6044bb0  Halberd flights launching. Kestrel, Vesper: get them to Grief.
+021ea573  Flight down! Next flight launching, cover them this time!
+ea2e4268  Grief is breaking up! Outstanding!
+53fe50c1  Batteries silent. The lane is open. Kestrel, close to seven kilometres and send the Nova.
+f8e93914  Fresh squadron off the Harbour, joining the fight.
+dd54165b  Shield's down! Their shield is down!
+cf9bd671  Detonation! Detonation! Core breach on the command ship!
+9f1341cd  ...Kestrel, Fleet... signal's weak... the relay's beacon... restore it and we can find you...
+8ff503ec  ...Kestrel! We have your beacon! Hold on, we're coming. Fleet Command out.
+e144026c  Kestrel, the Halcyon is two kilometres ahead. Boarding pods are clamped to her hull. Knock them off without hitting the ship.
+2a2ef32a  Four pods, Kestrel, and interceptors flying cover. Watch your fire near the hull.
+a5af9ab9  More company inbound. Hold that dock, Kestrel.
+4dd70b66  Last wave on the scope, with a gunboat. Clear it and the Halcyon can run.
+c2676979  Heavy contact inbound, fast. That's no interceptor. It's one of the Wellmonger's aces.
+466e876c  Ace down! Halcyon is clear. Good work, Kestrel. Meridian is waiting.
+eb3e29f0  Kestrel, Meridian is eight kilometres out. The Wellmonger's blockade sits across the lane, with a minefield in front of it. Burn hard and don't stop.
+fa4f80ab  Blockade guns are tracking you. Gunboats on the line, interceptors launching.
+3d8b2b80  You're through! Meridian's guns are covering you now. Get inside, bay three.
+afb66a7a  Kestrel, welcome to Meridian. Bay three is yours. Take her in.
+7c73da4c  Good flying, Kestrel. The Wellmonger knows your name now. Get some rest.
+70622bec  Kestrel, you are leaving the operation area. Come about.
+ca3a8fe4  Contacts ahead, Kestrel. Four interceptors. Weapons free.
+00547948  Second flight inbound, with a gunboat. It throws plasma. Keep moving.
+38ade366  Lanes are clear. Kestrel, new orders. The transport Halcyon is being boarded off your bow, with survivors aboard. Go get them.
+
+=== RECOVERED LOGS ===
+bc74d36d  Thule Relay, survey log nine. The dome readings are wrong again. Something under the ice is keeping time with the Blade.
+1e103aee  LOG 0001 · ARCHIVE: Year 2214. The Blade arrives. A sword the size of a moon, hanging silent off Jupiter. Nobody sees it come.
+ce796722  LOG 0044 · ARCHIVE: Within a century of the Blade, we have star drives, thinking machines and no hunger. We call it the golden age.
+e1c37c4e  LOG 0310 · DEEP WATCH: Something beyond the heliopause has started answering the Blade's light. It is not a reflection.
+47bdbbf2  LOG 1207 · MARS COMMAND: Every military AI on Olympus went quiet for nine seconds. When they came back, they were not ours.
+c070abf9  LOG 1412 · UNKNOWN: give us the sword give us the sword give us the sword
+ddad13b5  LOG 2001 · A. OKAFOR: Lattice was air-gapped. The Undertow came in anyway, through a repair frame back from the Europa run.
+103c0016  LOG 2003 · R. ADEYEMI: Thalassa is a military base. If its machines hold this station, the Dark has a fortress in orbit over Europa.
+8834fedd  LOG 2007 · A. OKAFOR: The machines are only the first wave. Deep Watch is tracking ships. Whatever serves the Dark is coming to Europa in person.
+6f0ad7c0  LOG 2010 · R. ADEYEMI: Seed vault inventory, sealed. 4,112 strains of wheat, rice and barley, and the last of the Europa spring cultivars. Eleven years of my life are in that room.
+13fbbc7e  LOG 2011 · R. ADEYEMI: My daughter Imani is down on Europa, in Cryo-farm Four. The colonies eat what this deck grows. I won't let the Dark have the harvest, or the people who eat it.
+65693ffb  LOG 2012 · R. ADEYEMI: The pruner is a grow-lab laser meant for trimming vines under the lamps. It cuts a drone just as clean. Turns out a gardener makes a decent soldier.
+
+=== CAPTAIN VARGA, HALCYON (radio) ===
+07fc661b  Kestrel, this is Captain Varga of the Halcyon. They're cutting into our cargo deck. Please hurry.
+d3f2d6ff  Pods are off! Our docking collar is on the starboard side, lights on. Bring her in slow.
+630d8173  Hatch sealed. Fourteen crew coming across, and my two escort pilots are launching.
+dce50df7  Moth and Ferro are yours, Kestrel. They will fly your wing to Meridian.
+127e0410  That flier gutted three of our escorts. Thank you, Kestrel.
+
+=== VESPER, WING CDR NADIA SOREL (radio) ===
+c211fe9b  Kestrel, this is Vesper. Glad you made the party. Form up on me, I'll take you through the screen.
+706a3105  On my wing. See that wall of red? That's the screen. We cut a hole in it.
+a7246ad5  The screen's broken! Harbour, launch the bombers.
+99d5c9ef  Turrets are down. Grief is naked. Bombers, she's all yours.
+713a48b2  Three batteries on the command ship's flank cover the Nova's lane. Silence them.
+c827a96b  Ion ship, high left! When it lights up, break the line. Don't fly straight at it.
+ba9793a5  I've got your tail. Go.
+51fd192d  Torpedoes away! Watch Grief's midships!
+53a9511a  She's still flying, Kestrel. You've got the second Nova. Put it in her heart.
+0219b1a3  Look at her go. That's for Thalassa.
+549952a2  Kestrel, Vesper. I'm off your nose. Form up, we're going home.
+1bc674d6  Contacts behind us. Nine of them. Break, break!
+15f081fe  I'm hit! I'm out of it, Kestrel. Run for Europa, I'll find you!

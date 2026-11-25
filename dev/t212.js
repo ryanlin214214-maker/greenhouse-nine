@@ -1,0 +1,10 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1100,height:660}});q.setDefaultTimeout(240000);q.on('pageerror',e=>errs.push(e.message));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/'+process.argv[2],{timeout:240000});await q.waitForTimeout(6000);
+await q.evaluate(()=>window.__rowLook&&window.__rowLook());await q.waitForTimeout(800);
+await q.evaluate(()=>window.__x("INTRO.on=false;setState('playing');flyStart(1);for(let i=0;i<30;i++)update(1/30);FC.on=false;const S=FLY;S.pos.set(0,300,-2500);S.h=0;S.p=-.35;yaw=0;pitch=-.35;S.camR=0;for(let i=0;i<10;i++)update(1/30)"));
+await q.addStyleTag({content:'.cine,#msg,.fcard,#comm{display:none!important}'});await q.waitForTimeout(5000);await q.screenshot({path:'E_1.png'});
+await q.evaluate(()=>window.__x("const S=FLY;S.h=2.4;S.p=-.6;yaw=2.4;pitch=-.6;for(let i=0;i<10;i++)update(1/30)"));await q.waitForTimeout(4000);await q.screenshot({path:'E_2.png'});
+console.log('errs',errs.slice(0,4));await b.close()})();

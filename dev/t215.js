@@ -1,0 +1,13 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:1000,height:640}});q.setDefaultTimeout(240000);q.on('pageerror',e=>errs.push(e.message));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/'+process.argv[2],{timeout:240000});await q.waitForTimeout(6000);
+await q.evaluate(()=>window.__rowLook&&window.__rowLook());await q.waitForTimeout(800);
+await q.evaluate(()=>window.__x("INTRO.on=false;setState('playing');for(let i=0;i<10;i++)update(1/30);const o=wpDraw;wpDraw=function(){if(window.__wpc)window.__x(window.__wpc);o()}"));
+await q.evaluate(()=>window.__x("WPR.key=-2;wpRoute(0,200,'HANGAR');const D=WPR.doors[0];const dx=D.ax==='x'?D.c:D.dc,dz=D.ax==='x'?D.dc:D.c;let px=dx,pz=dz;if(D.ax==='x')px-=9*Math.sign(dx-pos.x||1);else pz-=9*Math.sign(dz-pos.z||1);pos.set(px,pos.y,pz);eye.set(px,pos.y+EYE,pz);yaw=Math.atan2(-(dx-px),-(dz-pz));pitch=0;WPR.key=-2"));
+await q.evaluate(()=>{window.__wpc="wpRoute(0,200,'HANGAR');WPR.live=true"});
+await q.waitForTimeout(3000);
+console.log(await q.evaluate(()=>window.__x("JSON.stringify({pos:[pos.x,pos.y,pos.z].map(v=>+v.toFixed(1)),doors:WPR.doors,dmk:DMK&&DMK.map(g=>[g.visible,g.position.toArray().map(v=>+v.toFixed(1)),g.parent===scene,g.children.length,g.children[0].scale.toArray()]),dv:DOORV.length,sample:DOORV.slice(0,3)})")));
+await q.screenshot({path:'D_dbg.png'});
+console.log('errs',errs.slice(0,4));await b.close()})();

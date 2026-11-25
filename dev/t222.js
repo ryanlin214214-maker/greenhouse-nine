@@ -1,0 +1,13 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const q=await b.newPage({viewport:{width:1250,height:780}});q.setDefaultTimeout(240000);
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/t100x.html',{timeout:240000});await q.waitForTimeout(5000);
+await q.evaluate(()=>window.__rowLook&&window.__rowLook());await q.waitForTimeout(500);
+const X=c=>q.evaluate(c=>window.__x(c),c);
+await X("INTRO.on=false;setState('playing');window.__freeze=true;enemies.length=0;pos.set(0,0,160);yaw=Math.PI;pitch=-.15;for(let i=0;i<8;i++)update(1/30);eye.set(pos.x,pos.y+EYE,pos.z)");
+await q.waitForTimeout(1500);
+console.log(await X(`const c=ATMO.chase[6];const P2=c.q.getWorldPosition(new T.Vector3());const o=cam.position.clone();const dir=P2.clone().sub(o);const L2=dir.length();
+ const rc=new T.Raycaster(o,dir.normalize(),0,L2);rc.camera=cam;const h=rc.intersectObjects(scene.children,true).filter(i=>i.object.visible&&i.object!==c.q).slice(0,4).map(i=>i.object.type+':'+(i.object.material.color?i.object.material.color.getHexString():'')+':'+i.distance.toFixed(1)+'/'+L2.toFixed(1)+':'+i.point.toArray().map(v=>v.toFixed(1)).join(','));
+ const v=P2.clone().project(cam);'cam '+o.toArray().map(v=>v.toFixed(1))+' sprite '+P2.toArray().map(v=>v.toFixed(1))+' ndc '+[v.x,v.y,v.z].map(v=>v.toFixed(2))+' block '+JSON.stringify(h)+' parentScene '+(c.q.parent===scene)+' matOp '+c.q.material.opacity+' z '+v.z.toFixed(6)+' near '+cam.near+' far '+cam.far+' log '+renderer.capabilities.logarithmicDepthBuffer+' frustum '+c.q.frustumCulled+' scale '+c.q.scale.x+' depthTest '+c.q.material.depthTest+' map '+!!c.q.material.map+' blend '+c.q.material.blending`));
+await b.close()})();

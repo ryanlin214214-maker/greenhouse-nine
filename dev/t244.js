@@ -1,0 +1,9 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const errs=[];const q=await b.newPage({viewport:{width:600,height:400}});q.setDefaultTimeout(900000);q.on('pageerror',e=>errs.push(e.message+' '+(e.stack||'').split('\n')[1]));
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/t107x.html',{timeout:240000});await q.waitForTimeout(4000);const X=c=>q.evaluate(c=>window.__x(c),c);
+console.log(await X(`INTRO.on=false;startAt(4,2);for(let i=0;i<5;i++){update(1/30);cmdTick(1/30)}enemies.length=0;queue.length=0;CMD.w.b=1;CMD.w.c=1;const e=latSpawn(16,0,40);pos.set(0,0,15);const L=[];
+ for(let i=0;i<90;i++){update(1/30);cmdTick(1/30);if(i%10==0)L.push([e.pos.z.toFixed(1),e.rig.segs.legs[0][0].rotation.x.toFixed(2),e.lat.seg.thL.rotation.x.toFixed(2),(e.svx||0).toFixed(2),(e.svz||0).toFixed(2)].join('/'))}JSON.stringify(L)`));
+console.log(await X(`const e=enemies[0];e.spd=0;e.pos.set(-25,e.pos.y,-100);const P=e.pos;pos.set(P.x,0,P.z+14);const h0=e.hp;let t=0;firing=true;for(;t<90;t++){const c=new T.Vector3(P.x,P.y+e.hy,P.z),dx=c.x-pos.x,dz=c.z-pos.z;yaw=Math.atan2(-dx,-dz);pitch=Math.atan2(c.y-(pos.y+EYE),Math.hypot(dx,dz));eye.set(pos.x,pos.y+EYE,pos.z);cam.position.copy(eye);cam.rotation.set(pitch,yaw,0,'YXZ');cam.updateMatrixWorld();if(guns[weapon].mag<=0)guns[weapon].mag=99;update(1/30);cmdTick(1/30);time+=1/30}firing=false;JSON.stringify([h0,e.hp,P.toArray().map(v=>v.toFixed(1)),pos.toArray().map(v=>v.toFixed(1)),e.hy,state,inBox(pos.x,1,pos.z)])`));
+console.log('errs',errs);await b.close()})();

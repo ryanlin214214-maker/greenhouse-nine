@@ -1,0 +1,11 @@
+const {chromium}=require('playwright');const fs=require('fs');const P=Math.PI;
+(async()=>{const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+const q=await b.newPage({viewport:{width:1250,height:780}});q.setDefaultTimeout(240000);
+await q.route('**/cannon.min.js',r=>r.fulfill({body:fs.readFileSync('node_modules/cannon/build/cannon.min.js','utf8'),contentType:'text/javascript'}));
+await q.goto('file://'+process.cwd()+'/gtest/t100x.html',{timeout:240000});await q.waitForTimeout(5000);
+await q.evaluate(()=>window.__rowLook&&window.__rowLook());await q.waitForTimeout(500);
+const X=c=>q.evaluate(c=>window.__x(c),c);
+await X("INTRO.on=false;setState('playing');window.__freeze=true;enemies.length=0;ATMO.steam=[];pos.set(88,0,96);yaw=-Math.PI/2;pitch=.1;for(let i=0;i<8;i++)update(1/30);eye.set(pos.x,pos.y+EYE,pos.z)");
+await q.waitForTimeout(6000);await q.screenshot({path:'fx/nosteam.png',clip:{x:250,y:100,width:600,height:320}});
+console.log(await X("const L=[];scene.traverse(o=>{if(o.visible&&(o.isMesh||o.isSprite)){const p=new T.Vector3();o.getWorldPosition(p);if(p.x>95&&p.x<112&&p.y>5&&p.y<12&&Math.abs(p.z-96)<14)L.push(o.type+':'+(o.material.color?o.material.color.getHexString():'')+':'+p.toArray().map(v=>v.toFixed(1)).join(',')+':'+(o.material.transparent?'t'+o.material.opacity:'')+(o.isMesh?':'+o.scale.toArray().map(v=>v.toFixed(1)).join('x'):''))}});L.slice(0,20).join('\\n')"));
+await b.close()})();
